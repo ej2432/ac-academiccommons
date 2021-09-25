@@ -37,40 +37,7 @@
   </div>
 
   <div class="form-group">
-    <%= form.label(:school, 'School', class: 'control-label') %>
-    <%= form.text_field(:school) %>
-  </div>
-
-  <div class="form-group">
-    <%= form.label(:department, 'Department', class: 'control-label') %>
-    <%= form.text_field(:department) %>
-  </div>
-
-  <div class="form-group checkbox">
-    <h3>Current student?</h3>
-    <%= form.check_box :student %>
-    <%= form.label :student, 'Check here if you are a current student at Columbia or one of its affiliate institutions.' %>
-  </div>
-
-  <div class="form-group">
-    <%= form.label(:degreeprogram, 'Degree Program (if student)', class: 'control-label') %>
-    <%= form.text_field(:degreeprogram) %>
-  </div>
-
-  <div class="form-group checkbox">
-    <h3>Thesis or dissertation?</h3>
-      <p class="note">With the exception of dissertations completed for Union Theological Seminary (UTS), which does not require deposit in Academic Commons, all doctoral dissertations published after 2011 are automatically deposited in Academic Commons by the degree program. Masters theses are only automatically deposited in Academic Commons if a school or program has an established workflow for doing so. Contact ac@columbia.edu for more information.</p>
-    <%= form.check_box :thesis %>
-    <%= form.label :thesis, 'Check here if this is a master’s thesis.' %>
-  </div>
-
-  <div class="form-group">
-    <%= form.label(:degreeearned, 'Degree Earned (if thesis)', class: 'control-label') %>
-    <%= form.text_field(:degreeearned, placeholder: 'e.g.: MA, MSc, MBA') %>
-  </div>
-
-  <div class="form-group">
-    <h3>Creator(s) (including advisors)*</h3>
+    <h3>Creator(s)*</h3>
     <div class="creators">
 
       <%= '<div class="field_with_errors">'.html_safe if @deposit.errors.include?(:creators) %>
@@ -103,9 +70,48 @@
     </div>
   </div>
 
+  <div class="form-group checkbox">
+    <h3>Current student?</h3>
+    <%= form.check_box :student %>
+    <%= form.label :student, 'Check here if you are a current student at Columbia or one of its affiliate institutions.' %>
+  </div>
+
+<div>
+
+  <div class="form-group">
+    <%= form.label(:degreeprogram, 'Degree Program (if student)', class: 'control-label') %>
+    <%= form.text_field(:degreeprogram) %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label(:academicadvisor, 'Academic Advisor (if student)', class: 'control-label') %>
+    <%= form.text_field(:academicadvisor) %>
+  </div>
+
   <div class="form-group radio">
-    <h3>Embargo</h3>
-        <p class="note">You may request an optional embargo for one or two years.</p>
+    <h3>Thesis or dissertation?</h3>
+      <p class="note">With the exception of dissertations completed for Union Theological Seminary (UTS), which does not require deposit in Academic Commons, all doctoral dissertations published after 2011 are automatically deposited in Academic Commons by the degree program. Masters theses are only automatically deposited in Academic Commons if a school or program has an established workflow for doing so. Contact <%= mail_to "ac@columbia.edu" %> for more information.</p>
+      <ul>
+          <li>
+              <%= form.radio_button :thesis, "masters" %>
+              <%= form.label :thesis_masters, "This is a master's thesis" %>
+          </li>
+          <li>
+              <%= form.radio_button :thesis, "undergrad" %>
+              <%= form.label :thesis_undergrad, 'This is an undergraduate thesis' %>
+          </li>
+      </ul>
+  </div>
+</div>
+
+  <div class="form-group">
+    <%= form.label(:degreeearned, 'Degree Earned (if thesis)', class: 'control-label') %>
+    <%= form.text_field(:degreeearned, placeholder: 'e.g.: MA, MSc, MBA') %>
+  </div>
+
+  <div class="form-group radio">
+    <h3>Thesis Embargo</h3>
+        <p class="note">Students may request an optional embargo for one or two years. Embargos are approved by your department. If you are not certain about what embargo options are available to you, please contact <%= mail_to "ac@columbia.edu" %> and staff will reach out to your department.</p>
       <ul>
           <li>
               <%= form.radio_button(:embargo, "1year") %>
@@ -118,23 +124,13 @@
       </ul>
   </div>
 
-  <div class="form-group checkbox">
-    <h3>Is this your original work?</h3>
-      <p class="note">Please note that by signing our Author Agreement you have agreed to only upload your own work. If you need to make a deposit on behalf of someone else, please contact Academic Commons staff at ac@columbia.edu.</p>
-    <%= form.check_box :yesoriginal %>
-    <%= form.label :yesoriginal, 'Yes' %><br />
-  </div>
-
   <div class="form-group radio">
     <h3>Have you previously published this work?</h3>
+      <p class="note">If you are uploading a previously published work, the publication agreement that you signed may affect what version you can upload to Academic Commons. Check the terms of your agreement. You can also view many journal and publisher open access policies using the <%= link_to "Sherpa Romeo database", "https://v2.sherpa.ac.uk/romeo/", target: "_blank" %>.</p>
       <ul>
           <li>
-              <%= form.radio_button :previouspub, "open" %>
-              <%= form.label :previouspub_open, 'Yes; I published this open access' %>
-          </li>
-          <li>
-              <%= form.radio_button :previouspub, "closed" %>
-              <%= form.label :previouspub_closed, 'Yes; I published this non-open access' %>
+              <%= form.radio_button :previouspub, "yes" %>
+              <%= form.label :previouspub_yes, 'Yes' %>
           </li>
           <li>
               <%= form.radio_button :previouspub, "no" %>
@@ -162,16 +158,12 @@
       </ul>
   </div>
 
-  <div class="form-group">
-    <%= form.label(:notes, 'Notes', class: 'control-label') %>
-    <%= form.text_area(:notes, placeholder: 'Additional information you want included in the record (such as suggested keywords) and/or notes for repository staff') %>
-  </div>
-
   <div class="form-group checkbox">
-    <h3>Licensing</h3>
-      <p class="note">Please confirm how you wish others to re-use your deposit. For more general information about how copyright works, see <%= link_to "Columbia University Library's Copyright Advisory Service's Copyright Quick Guide", "https://copyright.columbia.edu/basics/copyright-quick-guide.html", target: "_blank" %>. For specific licensing terms and conditions on re-use of your deposit for each of the options, click on the associated links.<br /><br />
-      You can choose not to set any specific licensing terms and conditions and if so; if so, domestic and international copyright laws alone will determine the ways in which your work can be used and distributed. Generally, copyright laws prevent further reuse and distribution of a work without the explicit permission of the copyright holder. If you choose not to set specific licensing terms for re-use, then you must choose the option "All Rights Reserved.”<br /><br />
-      Learn more about the Creative Commons licenses <%= link_to "here", "https://creativecommons.org/licenses/", target: "_blank" %> and more about the MIT license <%= link_to "here", "https://opensource.org/licenses/MIT", target: "_blank" %>.</p>
+    <h3>Licensing*</h3>
+      <p class="note">Please confirm how you wish others to re-use your deposit. For more general information about how copyright works, see <%= link_to "Columbia University Library's Copyright Advisory Service's Copyright Quick Guide", "https://copyright.columbia.edu/basics/copyright-quick-guide.html", target: "_blank" %>.<br /><br />
+      You can choose not to set any specific licensing terms and conditions; if so, domestic and international copyright laws alone will determine the ways in which your work can be used and distributed. Generally, copyright laws prevent further reuse and distribution of a work without the explicit permission of the copyright holder. If you choose not to set specific licensing terms for re-use, then you must choose the option "All Rights Reserved.”<br /><br />
+      Learn more about the Creative Commons <%= link_to "CC BY licenses", "https://creativecommons.org/licenses/", target: "_blank" %>, <%= link_to "CC0 license", "https://creativecommons.org/share-your-work/public-domain/cc0/", target: "_blank" %>, and <%= link_to "the MIT license", "https://opensource.org/licenses/MIT", target: "_blank" %>. Note that while the CC0 license may be appropriate for data sets, by selecting this license you waive, to the extent possible, any copyrights you hold in the work. Creative Commons recommends the CC BY license, which it considers its most accommodating license, for maximum dissemination and use of licensed materials.
+</p>
       <ul style="list-style-type:none;">
           <li>
               <%= form.radio_button :license, "ccby" %>
@@ -198,6 +190,10 @@
               <%= form.label :license_ccbyncnd, 'CC BY-NC-ND 4.0' %>         
           </li>
           <li>
+              <%= form.radio_button :license, "cc0" %>
+              <%= form.label :license_ccby, 'CC0' %>         
+          </li>
+          <li>
               <%= form.radio_button :license, "mit" %>
               <%= form.label :license_mit, 'MIT License (for software)' %>         
           </li>
@@ -206,6 +202,16 @@
               <%= form.label :license_allrightsreserved, 'All rights reserved - Use by others as provided for by copyright laws' %>         
           </li>    
       </ul>
+  </div>
+
+  <div class="form-group">
+    <%= form.label(:keywords, 'Keywords', class: 'control-label') %>
+    <%= form.text_area(:keywords, placeholder: 'Suggested keywords for this work. Note that Academic Commons uses the Library of Congress FAST vocabulary and staff will do their best to match your suggested terms to the FAST vocabulary.') %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label(:notes, 'Notes', class: 'control-label') %>
+    <%= form.text_area(:notes, placeholder: 'Additional information you want included in the record and/or notes for repository staff') %>
   </div>
 
  <!-- <div class="form-group">

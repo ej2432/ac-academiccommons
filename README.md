@@ -30,7 +30,7 @@ Current recommended version of Ruby is specified in `.ruby-version`.
    bundle install
    ```
 
-5. Install required Javascript libraries using Yarn
+5. Install required Javascript libraries using Yarn *(Note: If yarn fails, you may need to use [nvm](https://github.com/nvm-sh/nvm) or another node.js version manager to set your node version to 12.0)*
     ```
     brew install yarn
     yarn
@@ -46,7 +46,7 @@ Current recommended version of Ruby is specified in `.ruby-version`.
    rake jetty:start
    ```
 
-8. Start your local solr instance with a development core. (Leave this command running in the background)
+8. Start your local solr instance with a development core. (Leave this command running in the background) *(Note: If solr_wrapper fails, you may need to use [jenv](https://github.com/jenv/jenv) or another java version manager to set your java version to 1.8)*
    ```
    solr_wrapper
    ```

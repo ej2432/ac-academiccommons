@@ -56,4 +56,15 @@ describe Deposit, type: :model do
       include_examples 'generates expected mets'
     end
   end
+  describe '#rights' do
+    context 'when deposit is saved without a rights value' do
+      let(:expected_uri) { Deposit::RIGHTS_OPTIONS['In Copyright'] }
+      
+      subject(:deposit) { FactoryBot.create(:deposit, rights: '') }
+      
+      it 'will be assigned a value of in_copyright' do
+        expect(deposit.rights).to eql(expected_uri)
+      end
+    end
+  end
 end

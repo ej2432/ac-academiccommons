@@ -70,47 +70,45 @@
     </div>
   </div>
 
-# I would like to toggle from here through 'thesis embargo' if someone checks this box.
-
   <div class="form-group checkbox">
     <h3>Current student?</h3>
     <%= form.check_box :student %>
     <%= form.label :student, 'Check here if you are a current student at Columbia or one of its affiliate institutions.' %>
   </div>
 
-# I would like to toggle from here through 'thesis embargo' if someone checks the box above.
+<p style="color: red; font-style: italic">I would like to toggle from here through 'thesis embargo' if someone checks the box above.</p>
 
 <div>
+  <div>
+    <div class="form-group">
+      <%= form.label(:degreeprogram, 'Degree Program (if student)', class: 'control-label') %>
+      <%= form.text_field(:degreeprogram) %>
+    </div>
 
-  <div class="form-group">
-    <%= form.label(:degreeprogram, 'Degree Program (if student)', class: 'control-label') %>
-    <%= form.text_field(:degreeprogram) %>
-  </div>
+    <div class="form-group">
+      <%= form.label(:academicadvisor, 'Academic Advisor (if student)', class: 'control-label') %>
+      <%= form.text_field(:academicadvisor) %>
+    </div>
 
-  <div class="form-group">
-    <%= form.label(:academicadvisor, 'Academic Advisor (if student)', class: 'control-label') %>
-    <%= form.text_field(:academicadvisor) %>
+    <div class="form-group radio">
+      <h3>Thesis or dissertation?</h3>
+        <p class="note">Doctoral dissertations completed at the Graduate School of Arts and Sciences, the Mailman School of Public Health, and Teachers College are automatically included in Academic Commons as part of the deposit process. Some Master's and undergraduate programs have an established workflow for submitting theses to Academic Commons. Contact your degree program or <%= mail_to "ac@columbia.edu" %> for more information.</p>
+        <ul>
+           <li>
+                <%= form.radio_button :thesis, "doctoral" %>
+                <%= form.label :thesis_doctoral, "This is a doctoral dissertation" %>
+            </li>
+            <li>
+                <%= form.radio_button :thesis, "masters" %>
+                <%= form.label :thesis_masters, "This is a master's thesis" %>
+            </li>
+            <li>
+                <%= form.radio_button :thesis, "undergrad" %>
+                <%= form.label :thesis_undergrad, 'This is an undergraduate thesis' %>
+            </li>
+        </ul>
+    </div>
   </div>
-
-  <div class="form-group radio">
-    <h3>Thesis or dissertation?</h3>
-      <p class="note">With the exception of dissertations completed for Union Theological Seminary (UTS), which does not require deposit in Academic Commons, all doctoral dissertations published after 2011 are automatically deposited in Academic Commons by the degree program. Masters theses are only automatically deposited in Academic Commons if a school or program has an established workflow for doing so. Contact <%= mail_to "ac@columbia.edu" %> for more information.</p>
-      <ul>
-         <li>
-              <%= form.radio_button :thesis, "doctoral" %>
-              <%= form.label :thesis_doctoral, "This is a doctoral dissertation" %>
-          </li>
-          <li>
-              <%= form.radio_button :thesis, "masters" %>
-              <%= form.label :thesis_masters, "This is a master's thesis" %>
-          </li>
-          <li>
-              <%= form.radio_button :thesis, "undergrad" %>
-              <%= form.label :thesis_undergrad, 'This is an undergraduate thesis' %>
-          </li>
-      </ul>
-  </div>
-</div>
 
   <div class="form-group">
     <%= form.label(:degreeearned, 'Degree Earned (if thesis)', class: 'control-label') %>
@@ -131,8 +129,9 @@
           </li>
       </ul>
   </div>
+</div>
 
-# Here is where the toggle would end.
+<p style="color: red; font-style: italic">Here is where the toggle would end.</p>
 
   <div class="form-group radio">
     <h3>Have you previously published this work?</h3>

@@ -115,6 +115,7 @@ RSpec.describe 'Upload', type: :feature do
       it 'renders "Use of Others" with correct license' do
         expect(page).to have_select('Use by Others*', options: license_options)
       end
+      
     end
 
     it 'contains file field' do

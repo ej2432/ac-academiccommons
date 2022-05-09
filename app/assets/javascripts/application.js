@@ -16,7 +16,6 @@
 //= require dropzone
 //= require upload/file-upload
 //= require upload/add-creator
-//= require upload/license-options
 //= require upload/disable-form
 //= require jquery-ui-sortable
 //= require upload/author-reorder

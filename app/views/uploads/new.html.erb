@@ -167,52 +167,6 @@
       </ul>
   </div>
 
-  <div class="form-group checkbox">
-    <h3>Licensing*</h3>
-      <p class="note">You may wish to consider adding a license that will govern how others re-use your work. You are not obligated to do so but a license provides others with greater certainty about what they can or cannot do with your research output. For more information about how copyright works, see <%= link_to "Columbia University Library's Copyright Advisory Service's Copyright Quick Guide", "https://copyright.columbia.edu/basics/copyright-quick-guide.html", target: "_blank" %>.<br /><br />
-      If you decide not to set specific licensing terms for re-use, then you must choose the option "All Rights Reserved.” This means that domestic and international copyright laws alone will determine the ways in which your work can be used and distributed. Generally, copyright laws prevent further reuse and distribution of a work without the explicit permission of the copyright holder.<br /><br />
-      Learn more about the Creative Commons <%= link_to "CC BY licenses", "https://creativecommons.org/licenses/", target: "_blank" %>, <%= link_to "CC0 license", "https://creativecommons.org/share-your-work/public-domain/cc0/", target: "_blank" %>, and <%= link_to "the MIT license", "https://opensource.org/licenses/MIT", target: "_blank" %>. Note that while the CC0 license may be appropriate for data sets, by selecting this license you waive, to the extent possible, any copyrights you hold in the work. Creative Commons recommends the CC BY license, which it considers its most accommodating license, for maximum dissemination and use of licensed materials.
-</p>
-      <ul style="list-style-type:none;">
-          <li>
-              <%= form.radio_button :license, "ccby" %>
-              <%= form.label :license_ccby, 'CC BY 4.0' %>         
-          </li>
-           <li>
-              <%= form.radio_button :license, "ccbysa" %>
-              <%= form.label :license_ccbysa, 'CC BY-SA 4.0' %>         
-          </li>     
-            <li>
-              <%= form.radio_button :license, "ccbynd" %>
-              <%= form.label :license_ccbynd, 'CC BY-ND 4.0' %>         
-          </li>    
-            <li>
-              <%= form.radio_button :license, "ccbync" %>
-              <%= form.label :license_ccbync, 'CC BY-NC 4.0' %>         
-          </li>
-              <li>
-              <%= form.radio_button :license, "ccbyncsa" %>
-              <%= form.label :license_ccbyncsa, 'CC BY-NC-SA 4.0' %>         
-          </li>
-          <li>
-              <%= form.radio_button :license, "ccbyncnd" %>
-              <%= form.label :license_ccbyncnd, 'CC BY-NC-ND 4.0' %>         
-          </li>
-          <li>
-              <%= form.radio_button :license, "cc0" %>
-              <%= form.label :license_ccby, 'CC0' %>         
-          </li>
-          <li>
-              <%= form.radio_button :license, "mit" %>
-              <%= form.label :license_mit, 'MIT License (for software)' %>         
-          </li>
-          <li>
-              <%= form.radio_button :license, "allrightsreserved" %>
-              <%= form.label :license_allrightsreserved, 'All rights reserved - Use by others as provided for by copyright laws' %>         
-          </li>    
-      </ul>
-  </div>
-
   <div class="form-group">
     <%= form.label(:keywords, 'Keywords', class: 'control-label') %>
     <%= form.text_area(:keywords, placeholder: 'Suggested keywords for this work. Note that Academic Commons uses the Library of Congress FAST vocabulary and staff will do their best to match your suggested terms to the FAST vocabulary.') %>
@@ -223,18 +177,23 @@
     <%= form.text_area(:notes, placeholder: 'Additional information you want included in the record and/or notes for repository staff') %>
   </div>
 
-  <%# div for with copyright selection %>
-
- <div class="form-group">
-    <%= form.label(:rights, 'Copyright Status*', class: 'control-label') %>
+ <!-- div class="form-group">
+    <!-- %= form.label(:rights, 'Copyright Status*', class: 'control-label') %>
     <p class="note">
-      Please confirm whether your deposit is copyright protected. If you are choosing to designate your work as public domain (i.e., having no copyright), you confirm that you have the full authority to do so. For more information about copyright protection, please consult
-      <%= link_to "Columbia University Library’s Copyright Advisory Service’s Copyright Quick Guide", 'https://copyright.columbia.edu/basics/copyright-quick-guide.html' %>.
+      Please indicate the copyright status of your work. Most works fall within copyright, although you may choose to openly license your work with one of the options below. For more information about copyright protection, please consult
+      <!-- %= link_to "Columbia University Library’s Copyright Advisory Service’s Copyright Quick Guide", 'https://copyright.columbia.edu/basics/copyright-quick-guide.html' %>.
     </p>
-    <%= form.select(:rights, Deposit::RIGHTS_OPTIONS, prompt: 'Choose copyright status of this work') %>
+    <!-- %= form.select(:rights, Deposit::RIGHTS_OPTIONS) %>
   </div>
 
-  <%# div for license information populated via javascript %>
+ <div class="form-group">
+    <%= form.label(:license, 'License', class: 'control-label') %>
+    <p class="note">
+      You may wish to consider adding a license that will govern how others re-use your work. You are not obligated to do so, but a license provides others with greater certainty about what they can or cannot do with your research output.<br /><br />
+      If you decide not to set specific licensing terms for re-use, the default option is "All Rights Reserved.” This means that domestic and international copyright laws alone will determine the ways in which your work can be used and distributed. Generally, copyright laws prevent further reuse and distribution of a work without the explicit permission of the copyright holder.<br /><br />
+      Learn more about the Creative Commons <%= link_to "CC BY licenses", "https://creativecommons.org/licenses/", target: "_blank" %> and the <%= link_to "CC0 license", "https://creativecommons.org/share-your-work/public-domain/cc0/", target: "_blank" %>. Note that while the CC0 license may be appropriate for data sets, by selecting this license you waive, to the extent possible, any copyrights you hold in the work. Creative Commons recommends the CC BY license, which it considers its most accommodating license, for maximum dissemination and use of licensed materials.    </p>
+    <%= form.select(:license, Deposit::LICENSE_OPTIONS) %>
+  </div>
 
   <div id="use-by-others" class="item"></div>
 

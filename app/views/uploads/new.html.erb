@@ -70,15 +70,16 @@
     </div>
   </div>
 
-  <div class="form-group checkbox">
-    <h3>Current student?</h3>
-    <%= form.check_box :student %>
-    <%= form.label :student, 'Check here if you are a current student at Columbia or one of its affiliate institutions.' %>
-  </div>
+  <div class="form-group">
+    <%= form.label(:student, 'Student Status', class: 'control-label') %>
+    <p class="note">Are you a current student at Columbia or one of its affiliate institutions?
+    </p>
+    <%= form.select(:student, Deposit::STUDENT_OPTIONS) %>
+   </div>
 
-<p style="color: red; font-style: italic">I would like to toggle from here through 'thesis embargo' if someone checks the box above.</p>
+<p style="color: red; font-style: italic">I would like to toggle from here through 'thesis embargo' if someone says 'yes' for the box above.</p>
 
-<div>
+<div id="student_info">
   <div>
     <div class="form-group">
       <%= form.label(:degreeprogram, 'Degree Program (if student)', class: 'control-label') %>

@@ -1,3 +1,9 @@
+.java-version
+.nvmrc
+README.md
+app.zip
+package.json
+yarn.lock
 .DS_Store
 .project
 .bundle

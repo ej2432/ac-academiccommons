@@ -16,6 +16,11 @@ class Deposit < ApplicationRecord
     'Attribution-NonCommercial-NoDerivs (CC BY-NC-ND)' => 'https://creativecommons.org/licenses/by-nc-nd/4.0/',   
     'No Rights Reserved (CC0)' => 'https://creativecommons.org/publicdomain/zero/1.0/'
     }.freeze
+  
+  STUDENT_OPTIONS = {
+    'No' => '',    
+    'Yes' => ''
+    }.freeze
 
   before_validation :clean_up_creators
 

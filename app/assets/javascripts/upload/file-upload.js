@@ -38,7 +38,7 @@ $(document).ready(function() {
           upload.create(function (error, blob){
             if (error) {
               // Handle the error
-              dropzone._errorProcessing([file], 'Error Uploading File');
+              dropzone._errorProcessing([file], 'Error Uploading File. If you are trying to upload a file larger than 1GB and receive this message, please email ac@columbia.edu for assistance.');
             } else {
               //  Add an appropriately-named hidden input to the form with a
               //  value of blob.signed_id so that the blob ids will be

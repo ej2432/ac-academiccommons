@@ -1,4 +1,4 @@
-lock '3.17.3'
+lock '~> 3.19.0'
 
 set :instance, 'ac'
 set :application, 'academiccommons'
@@ -23,7 +23,8 @@ set :deploy_to,   "/opt/passenger/#{fetch(:deploy_name)}"
 
 # Default value for linked_dirs is []
 set :linked_dirs,
-    fetch(:linked_dirs, []).push('log','tmp/pids', 'storage', 'public/feature-logos', 'node_modules', 'public/packs')
+    fetch(:linked_dirs, []).push('log','tmp/pids', 'storage', 'public/feature-logos', 'node_modules', 'public/packs',
+                                 'public/sitemaps')
 
 # Default value for keep_releases is 5
 set :keep_releases, 3
@@ -31,12 +32,17 @@ set :keep_releases, 3
 set :passenger_restart_with_touch, true
 
 set :linked_files, fetch(:linked_files, []).push(
+  'config/cul_ldap.yml',
   'config/database.yml',
   'config/solr.yml',
   'config/blacklight.yml',
   'config/fedora.yml',
+  'config/embedding_service.yml',
   'config/secrets.yml',
-  'public/robots.txt',
+  'config/custom_bots.json',
+  'config/crawler-user-agents.json',
+  "config/credentials/#{fetch(:deploy_name)}.key",
+  'public/robots.txt'
 )
 
 # Default value for :log_level is :debug
@@ -45,9 +51,9 @@ set :log_level, :info
 # NVM Setup, for selecting the correct node version
 # NOTE: This NVM configuration MUST be configured before the RVM setup steps because:
 # This works:
-# nvm exec 16 ~/.rvm-alma8/bin/rvm example_app_dev do node --version
+# nvm exec 20 ~/.rvm-alma8/bin/rvm example_app_dev do node --version
 # But this does not work:
-# ~/.rvm-alma8/bin/rvm example_app_dev do nvm exec 16 node --version
+# ~/.rvm-alma8/bin/rvm example_app_dev do nvm exec 20 node --version
 set :nvm_node_version, fetch(:deploy_name) # This NVM alias must exist on the server
 [:rake, :node, :npm, :yarn].each do |command_to_prefix|
   SSHKit.config.command_map.prefix[command_to_prefix].push("nvm exec #{fetch(:nvm_node_version)}")
@@ -65,6 +71,10 @@ set :ssh_options, { forward_agent: true }
 
 # Namespace crontab based on app environment.
 set :whenever_identifier, ->{ fetch(:deploy_name) }
+
+# Configure Capistrano for Vite (from https://vite-ruby.netlify.app/guide/deployment.html#using-capistrano)
+append :linked_dirs, 'public/vite'
+append :assets_manifests, 'public/vite/manifest*.*'
 
 namespace :deploy do
   desc "Report the environment"
@@ -89,3 +99,10 @@ namespace :deploy do
   before :publishing, 'sitemap:create'
   after  :publishing, :generate_500_html
 end
+
+# Now that we're using vite for our main site asset build rather than sprockets, the `deploy:assets:backup_manifest`
+# task doesn't do anything useful for us.  And in fact, it causes issues for fresh deployments.  See:
+# https://stackoverflow.com/questions/47914115/rails-manifest-file-not-found-deploying-with-capistrano
+# and
+# https://github.com/capistrano/rails/issues/235
+Rake::Task["deploy:assets:backup_manifest"].clear_actions

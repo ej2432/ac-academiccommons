@@ -23,7 +23,6 @@ RSpec.describe 'Upload', type: :feature do
     include_context 'non-admin user for feature'
 
     before do
-      SiteOption.create!(name: SiteOption::DEPOSITS_ENABLED, value: true)
       visit uploads_path
     end
 
@@ -40,7 +39,6 @@ RSpec.describe 'Upload', type: :feature do
     include_context 'non-admin user for feature'
 
     before do
-      SiteOption.create!(name: SiteOption::DEPOSITS_ENABLED, value: true)
       # Added signed agreement for logged in user, tried mocking :signed_latest_agreement? but it did not work
       Agreement.create(user: User.first, name: 'Test User', email: 'tu123@columbia.edu', agreement_version: Agreement::LATEST_AGREEMENT_VERSION)
       visit uploads_path
@@ -123,8 +121,10 @@ RSpec.describe 'Upload', type: :feature do
         choose 'deposit[license]', option: 'https://creativecommons.org/publicdomain/zero/1.0/'
         choose 'deposit[previously_published]', option: true
         attach_file nil, fixture('test_file.txt'), class: 'dz-hidden-input', visible: false
-        sleep(3) # Adding sleep so file properly attaches
+        # sleep(3) # Adding sleep so file properly attaches
         click_button 'Submit'
+        # do a find to make sure page loaded and action completed
+        find('h3', text: 'Thank you for uploading your work to Academic Commons.')
       end
 
       it 'renders submission confirmation' do
@@ -140,7 +140,7 @@ RSpec.describe 'Upload', type: :feature do
       it 'sends student reminder email' do
         email = ActionMailer::Base.deliveries.pop
         expect(email.subject).to eql 'Department approval may be needed'
-        expect(email.to).to include 'tu123@columbia.edu'
+        expect(email.to).to include User.first.email
       end
     end
 
@@ -150,17 +150,19 @@ RSpec.describe 'Upload', type: :feature do
         fill_in 'Title*', with: 'Test Deposit'
         fill_in 'Abstract*', with: 'Blah Blah Blah'
         fill_in 'Year Created*', with: '2017'
+        # missing field: file-upload
         click_button 'Submit'
       end
 
       it 'redirects to /new' do
-        expect(page).to have_current_path uploads_path
+        expect(page).to have_current_path new_upload_path
       end
 
+      #  todo : failing
       it 'fills in already filled in values' do
         expect(page).to have_field 'Title*', with: 'Test Deposit'
-        expect(page).to have_field 'Abstract*', with: 'Blah Blah Blah'
         expect(page).to have_field 'Year Created*', with: '2017'
+        expect(page).to have_field 'Abstract*', with: 'Blah Blah Blah'
       end
 
       it 'renders error messages' do

@@ -1,7 +1,8 @@
+import Dropzone from 'dropzone';
+
 // Overriding default file upload action provided by dropzone. Instead loading
 // file via active storage and saving a signed id in a hidden element.
-
-$(document).ready(function() {
+const ready = function() {
   Dropzone.autoDiscover = false;
 
   if ($('div#deposit-drop').length == 0){
@@ -62,4 +63,6 @@ $(document).ready(function() {
   // documents in the UI.
   var hiddenFileInputs = document.querySelectorAll('input[name="deposit[files][]"][type="hidden"]');
   hiddenFileInputs.forEach( function(currentValue, currentIndex, listObj) { currentValue.remove(); } );
-});
+};
+
+document.addEventListener('turbo:load', ready);

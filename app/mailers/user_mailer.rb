@@ -1,7 +1,7 @@
 class UserMailer < ApplicationMailer
   # This mailer contains emails that go to Academic Commons users.
   helper :catalog # Needed to correctly render persistent url.
-  default from: Rails.application.config_for(:emails)['mail_deliverer']
+  default from: Rails.application.config_for(:emails)[:mail_deliverer]
 
   def new_item_available(solr_doc, uni, email, name = nil)
     @uni = uni
@@ -15,7 +15,7 @@ class UserMailer < ApplicationMailer
                 'Your work is now available in Academic Commons'
               end
 
-    bcc = Rails.application.config_for(:emails)['administrative_notifications']
+    bcc = Rails.application.config_for(:emails)[:administrative_notifications]
 
     if Rails.application.config.prod_environment
       mail(to: @email, bcc: bcc, subject: subject)
@@ -43,5 +43,17 @@ class UserMailer < ApplicationMailer
     @name = name
 
     mail(to: email, subject: 'Department approval may be needed')
+  end
+
+  # Email to authors from AC administrators
+  # Called when the admin 'Contact Authors' form is submitted
+  def contact_authors(recipients, body, subject)
+    Rails.logger.debug 'UserMailer#notify_users: entry'
+    @body = body
+    @subject = subject
+
+    # For now, send to multiple users via BCC field.
+    mail(bcc: recipients, subject: subject)
+    # this will render app/views/user_mailer/contact_authors.html.erb
   end
 end

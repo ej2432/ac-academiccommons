@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 class CatalogController < ApplicationController
   include Blacklight::Catalog
   include BlacklightOaiProvider::Controller
-  include BlacklightRangeLimit::ControllerOverride
+  # Temporarily remove range limit slider -- ACHYDRA 1022
+  # include BlacklightRangeLimit::ControllerOverride
 
   rescue_from Blacklight::Exceptions::InvalidRequest do
     render plain: 'Invalid request.', status: :bad_request
@@ -32,6 +35,8 @@ class CatalogController < ApplicationController
   end
 
   configure_blacklight do |config|
+    config.bootstrap_version = 4
+
     allowed_params = [:id, :commit, :usage_statistics_reports_form, :verb,
                       :metadataPrefix, :_method, :deposit, :category_id, :agreement, :deposits_enabled]
     config.search_state_fields.concat(allowed_params)
@@ -40,16 +45,6 @@ class CatalogController < ApplicationController
     config.index.document_actions.delete(:bookmark)
 
     config.add_results_collection_tool(:sort_widget)
-
-    config.show.document_actions.delete(:bookmark)
-    config.show.document_actions.delete(:sms)
-    config.show.document_actions.delete(:citation)
-    config.show.document_actions.delete(:email)
-
-    config.add_show_tools_partial :asset_buttons,        partial: 'asset_buttons'
-    config.add_show_tools_partial :doi,                  partial: 'doi'
-    config.add_show_tools_partial :social_buttons,       partial: 'social_buttons'
-    config.add_show_tools_partial :use_and_reproduction, partial: 'use_and_reproduction'
 
     config.navbar.partials.delete(:bookmark)
     config.navbar.partials.delete(:saved_searches)
@@ -60,82 +55,28 @@ class CatalogController < ApplicationController
                                                                   .aggregators_only
                                                                   .to_h
 
+    # Configuring show action and views:
+    config.show.document_actions.delete(:bookmark)
+    config.show.document_actions.delete(:sms)
+    config.show.document_actions.delete(:citation)
+    config.show.document_actions.delete(:email)
+
+    config.add_show_tools_partial :asset_buttons,        partial: 'asset_buttons'
+    config.add_show_tools_partial :doi,                  partial: 'doi'
+    config.add_show_tools_partial :social_buttons,       partial: 'social_buttons'
+    config.add_show_tools_partial :use_and_reproduction, partial: 'use_and_reproduction'
+
     # solr field configuration for search results/index views
     config.show.title_field = 'title_ssi'
-    config.show.display_type_field = 'format'
+    # solr field to use to render format-specific partials
+    config.show.display_type_field = 'degree_level_name_ssim'
     config.show.genre = 'genre_ssim'
     config.show.author = 'author_ssim'
 
     config.show.partials = [:show] # Removing :show_header partial
 
-    # Default values of parameters to send when requesting a single document
-    config.default_document_solr_params = AcademicCommons::SearchParameters.new
-                                                                           .rows(1)
-                                                                           .request_handler('document')
-                                                                           .aggregators_with_assets
-                                                                           .to_h
-
-    # solr field configuration for search results/index views
-    config.index.title_field = 'title_ssi'
-    config.index.num_per_page = 10
-    config.index.display_type_field = 'format'
-
-    # solr fields that will be treated as facets by the blacklight application
-    # The ordering of the field names is the order of the display
-    #
-    # Setting a limit will trigger Blacklight's 'more' facet values link.
-    # * If left unset, then all facet values returned by solr will be displayed.
-    # * If set to an integer, then "f.somefield.facet.limit" will be added to
-    # solr request, with actual solr request being +1 your configured limit --
-    # you configure the number of items you actually want _displayed_ in a page.
-    # * If set to 'true', then no additional parameters will be sent to solr,
-    # but any 'sniffed' request limit parameters will be used for paging, with
-    # paging at requested limit -1. Can sniff from facet.limit or
-    # f.specific_field.facet.limit solr request params. This 'true' config
-    # can be used if you set limits in :default_solr_params, or as defaults
-    # on the solr side in the request handler itself. Request handler defaults
-    # sniffing requires solr requests to be made with "echoParams=all", for
-    # app code to actually have it echo'd back to see it.
-    #
-    # :show may be set to false if you don't want the facet to be drawn in the
-    # facet bar
-
-    config.add_facet_field 'author_ssim',            label: 'Author',          limit: 5
-    config.add_facet_field 'department_ssim',        label: 'Academic Unit',   limit: 5
-    config.add_facet_field 'subject_ssim',           label: 'Subject',         limit: 5
-    config.add_facet_field 'genre_ssim',             label: 'Type',            limit: 5
-    config.add_facet_field 'degree_level_name_ssim', label: 'Degree Level',    limit: 5
-    config.add_facet_field 'pub_date_isi',           label: 'Date Published',  limit: 5, range: { slider_js: false }
-    config.add_facet_field 'series_ssim',            label: 'Series',          limit: 5
-    config.add_facet_field 'partner_journal_ssi',    label: 'Journal',         limit: 5, show: true
-    config.add_facet_field 'language_ssim',          label: 'Language',        limit: 5
-    config.add_facet_field 'geographic_area_ssim',   label: 'Geographic Area', limit: 5, show: false
-    config.add_facet_field 'degree_grantor_ssim',    label: 'Degree Grantor',  limit: 5, show: false,
-                                                     query: {
-                                                       '("Columbia University" OR "Teachers College, Columbia University" OR "Union Theological Seminary" OR "Mailman School of Public Health, Columbia University")' => {
-                                                         label: 'Columbia University, Teachers College, Union Theological Seminary, or Mailman School of Public Health',
-                                                         fq: 'degree_grantor_ssim:("Columbia University" OR "Teachers College, Columbia University" OR "Union Theological Seminary" OR "Mailman School of Public Health, Columbia University")'
-                                                       }
-                                                     }
-    config.add_facet_field 'type_of_resource_ssim', label: 'Resource Type', if: ->(context, _, _) { context.current_user&.admin? }
-    config.add_facet_field 'featured_search',    label: 'Featured', query: LazyFeatureQueryFacet.new, show: false
-
-    # Have BL send all facet field names to Solr, which has been the default
-    # previously. Simply remove these lines if you'd rather use Solr request
-    # handler defaults, or have no facets.
-
-    config.add_facet_fields_to_solr_request!
-
-    # solr fields to be displayed in the index (search results) view
+    # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display
-
-    config.add_index_field 'author_ssim',  label: 'Authors',
-                                           separator_options: { words_connector: '; ', two_words_connector: '; ', last_word_connector: '; ' }
-    config.add_index_field 'pub_date_isi', label: 'Date'
-    config.add_index_field 'genre_ssim',   label: 'Type'
-    config.add_index_field 'subject_ssim', label: 'Subjects', helper_method: :wrap_in_spans
-
-
     # :display configuration is for our customized show view, it describes where on the page it should go.
     config.add_show_field 'pub_date_isi',           display: :tag, itemprop: 'datePublished'
     config.add_show_field 'genre_ssim',             display: :tag, itemprop: 'genre'
@@ -175,6 +116,74 @@ class CatalogController < ApplicationController
     config.add_show_field 'language_ssim',          display: :main_content,                 itemprop: 'inLanguage', helper_method: :metatags
 
 
+    # Default values of parameters to send when requesting a single document
+    config.default_document_solr_params = AcademicCommons::SearchParameters.new
+                                                                           .rows(1)
+                                                                           .request_handler('document')
+                                                                           .aggregators_with_assets
+                                                                           .to_h
+
+    # solr field configuration for search results/index views
+    config.index.title_field = 'title_ssi'
+    config.index.num_per_page = 10
+    config.index.display_type_field = 'format'
+    # config.index.group = false
+    # config.index.partials = [:index_header, :thumbnail, :index]
+
+    # solr fields that will be treated as facets by the blacklight application
+    # The ordering of the field names is the order of the display
+    #
+    # Setting a limit will trigger Blacklight's 'more' facet values link.
+    # * If left unset, then all facet values returned by solr will be displayed.
+    # * If set to an integer, then "f.somefield.facet.limit" will be added to
+    # solr request, with actual solr request being +1 your configured limit --
+    # you configure the number of items you actually want _displayed_ in a page.
+    # * If set to 'true', then no additional parameters will be sent to solr,
+    # but any 'sniffed' request limit parameters will be used for paging, with
+    # paging at requested limit -1. Can sniff from facet.limit or
+    # f.specific_field.facet.limit solr request params. This 'true' config
+    # can be used if you set limits in :default_solr_params, or as defaults
+    # on the solr side in the request handler itself. Request handler defaults
+    # sniffing requires solr requests to be made with "echoParams=all", for
+    # app code to actually have it echo'd back to see it.
+    #
+    # :show may be set to false if you don't want the facet to be drawn in the
+    # facet bar
+
+    config.add_facet_field 'author_ssim',            label: 'Author',          limit: 5
+    config.add_facet_field 'department_ssim',        label: 'Academic Unit',   limit: 5
+    config.add_facet_field 'subject_ssim',           label: 'Subject',         limit: 5
+    config.add_facet_field 'genre_ssim',             label: 'Type',            limit: 5
+    config.add_facet_field 'degree_level_name_ssim', label: 'Degree Level',    limit: 5
+    config.add_facet_field 'pub_date_isi',           label: 'Date Published',  limit: 5
+    config.add_facet_field 'series_ssim',            label: 'Series',          limit: 5
+    config.add_facet_field 'partner_journal_ssi',    label: 'Journal',         limit: 5, show: true
+    config.add_facet_field 'language_ssim',          label: 'Language',        limit: 5
+    config.add_facet_field 'geographic_area_ssim',   label: 'Geographic Area', limit: 5, show: false
+    config.add_facet_field 'degree_grantor_ssim',    label: 'Degree Grantor',  limit: 5, show: false,
+                                                     query: {
+                                                       '("Columbia University" OR "Teachers College, Columbia University" OR "Union Theological Seminary" OR "Mailman School of Public Health, Columbia University")' => {
+                                                         label: 'Columbia University, Teachers College, Union Theological Seminary, or Mailman School of Public Health',
+                                                         fq: 'degree_grantor_ssim:("Columbia University" OR "Teachers College, Columbia University" OR "Union Theological Seminary" OR "Mailman School of Public Health, Columbia University")'
+                                                       }
+                                                     }
+    config.add_facet_field 'type_of_resource_ssim', label: 'Resource Type', if: ->(context, _, _) { context.current_user&.admin? }
+    config.add_facet_field 'featured_search',    label: 'Featured', query: LazyFeatureQueryFacet.new, show: false
+
+    # Have BL send all facet field names to Solr, which has been the default
+    # previously. Simply remove these lines if you'd rather use Solr request
+    # handler defaults, or have no facets.
+
+    config.add_facet_fields_to_solr_request!
+
+    # solr fields to be displayed in the index (search results) view
+    #   The ordering of the field names is the order of the display
+
+    config.add_index_field 'author_ssim',  label: 'Authors',
+                                           separator_options: { words_connector: '; ', two_words_connector: '; ', last_word_connector: '; ' }
+    config.add_index_field 'pub_date_isi', label: 'Date'
+    config.add_index_field 'genre_ssim',   label: 'Type'
+    config.add_index_field 'subject_ssim', label: 'Subjects', helper_method: :wrap_in_spans
 
 
     # "fielded" search configuration. Used by pulldown among other places.

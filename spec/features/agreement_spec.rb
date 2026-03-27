@@ -4,7 +4,7 @@ describe 'Agreement', type: :feature do
   include_context 'non-admin user for feature'
 
   before do
-    SiteOption.create!(name: SiteOption::DEPOSITS_ENABLED, value: true)
+    allow_any_instance_of(SiteConfigurationHelper).to receive(:deposits_enabled?).and_return(true) # rubocop:disable RSpec/AnyInstance
     visit agreement_path
   end
 

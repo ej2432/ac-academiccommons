@@ -1,4 +1,7 @@
-$(document).ready(function(){
+import * as Readmore from 'readmore-js';
+
+// For now, keep this as is and test whether there is a render delay when deployed to dev
+const ready = function(){
   new Readmore.default('#document .blacklight-author_ssim', {
   collapsedHeight: 25,
   lessLink: '<a href="#">View fewer authors</a>',
@@ -12,4 +15,6 @@ $(document).ready(function(){
   moreLink: '<a href="#">Read more</a>',
   embedCSS: 'false'
   });
-});
+};
+
+document.addEventListener('turbo:load', ready);

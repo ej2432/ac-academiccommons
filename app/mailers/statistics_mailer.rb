@@ -1,5 +1,5 @@
 class StatisticsMailer < ApplicationMailer
-  default from: "Academic Commons <#{Rails.application.config_for(:emails)['mail_deliverer']}>"
+  default from: "Academic Commons <#{Rails.application.config_for(:emails)[:mail_deliverer]}>"
 
   def author_monthly(to_address, author_id, usage_stats, optional_note)
     @author_id = author_id
@@ -15,7 +15,6 @@ class StatisticsMailer < ApplicationMailer
     logger.debug("Report sent for: #{author_id} to: #{to_address}")
   end
 
-  # rubocop:disable Metrics/ParameterLists
   def usage_statistics(to, subject, body, csv, usage_stats, stats_display)
     @body = body
     @usage_stats = usage_stats
@@ -25,5 +24,4 @@ class StatisticsMailer < ApplicationMailer
 
     mail(to: to, subject: subject)
   end
-  # rubocop:enable Metrics/ParameterLists
 end

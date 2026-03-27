@@ -95,6 +95,10 @@
 
 <p>You must ensure you have the right to upload any given work. See the <a href="https://copyright.columbia.edu/">Columbia Copyright Advisory Services</a> website to learn more.</p>
 
+<h3>Can I archive my journal in Academic Commons?</h3>
+<p>Editorial boards of journals affiliated with Columbia University may be able to arrange to archive journal content in Academic Commons. Individual journal article authors must sign the <%= link_to 'Academic Commons Author Agreement', agreement_path %> or a similar agreement allowing for their work to be deposited in Academic Commons. Depositing work by high school students and people under the age of 18 is not permitted in Academic Commons. In the case of student journals, departmental approval is required before a journal may be archived in Academic Commons.</p>
+<p>If you are interested in having a conversation about archiving a particular journal, please reach out to us at <a href="mailto:ac@columbia.edu">ac@columbia.edu</a>.</p>
+
 <h3 id="student-works">What student works are included in Academic Commons?</h3>
 <p>Current students may be encouraged or required by their degree programs to contribute their thesis or capstone project to Academic Commons. Some students may also be able to upload other research or scholarship with the approval of their department, program or faculty advisor. See below for details, and email <a href="mailto:ac@columbia.edu">ac@columbia.edu</a> to learn about any agreements your department or program may have with us concerning student work.</p>
 
@@ -156,7 +160,7 @@
 <p>If you are a student and want to upload other types of research or scholarship  in Academic Commons, you must obtain approval from the appropriate degree program, department, or faculty advisor. Contact us at <a href="mailto:ac@columbia.edu">ac@columbia.edu</a> to learn more.</p>
 
 <h4>Thesis and dissertation embargoes</h4>
-<p>If your degree program requires or encourages you to upload your thesis to Academic Commons, you may have the option of placing an embargo on your thesis. An embargo is a limited period of time during which your thesis is not publicly available. During the embargo period, descriptive information about the work is publicly accessible in Academic Commons and in CLIO, the Columbia Libraries catalog, but the thesis itself is not available. Embargo options vary by program and students should consult their degree program’s policies for more information.</p>
+<p>If your degree program requires or encourages you to upload your thesis to Academic Commons, you may have the option of placing an embargo on your thesis. An embargo is a limited period of time during which your thesis is not publicly available. During the embargo period, descriptive information about the work is publicly accessible in Academic Commons and in CLIO, the Columbia Libraries catalog, but the thesis itself is not available publicly. Embargo options vary by program and students should consult their degree program’s policies for more information.</p>
 
 <h3>How can I request an embargo, or an embargo extension, on my thesis or dissertation?</h3>
 <p>If you wish to make changes to the length of the embargo on your thesis or dissertation in Academic Commons, contact the degree-program administrator with your request. If the request is approved, the program administrator will contact Academic Commons staff. If you are not sure to whom you should direct your request, contact Academic Commons at <a href="mailto:ac@columbia.edu">ac@columbia.edu</a>.</p>
@@ -202,7 +206,7 @@
 <p>Academic Commons and <a href="https://datadryad.org/stash">Dryad</a> are both committed to making research data as Finadable, Accessible, Interoperable, and Reusable as possible, in accordance with the <a href="https://www.go-fair.org/fair-principles/">FAIR Principles</a>. Find more information on preparing your data for sharing on Dryad’s <a href="https://datadryad.org/stash/best_practices">FAIR Data page</a> or by contacting the Columbia Libraries <a href="https://library.columbia.edu/services/research-data-services.html">Research Data Services</a>. </p>
 
 <h3>Are there other data repositories for me to use to share my data?</h3>
-<p>Yes. There are numerous data platforms that may be appropriate repositories for your data. Disciplinary repositories, when available, often have the best tools for describing your data. A few repositories that you may wish to explore are <a href="https://www.icpsr.umich.edu/web/pages/">ICPSR</a> (social and behavioral research), <a href="https://ropercenter.cornell.edu/">Roper</a> (public opinion data) and <a href="https://data.qdr.syr.edu/">QDR</a> (qualitative data in the social sciences). <a href="https://datadryad.org/stash">Dryad</a> (see the two FAQs above this one) is a general data repository. Columbia University IT also provides the <a href="https://dataplatform.cuit.columbia.edu/">Columbia Data Platform</a> for storing and working with data, and the Office of the Executive Vice President for Research (EVPR) provides a page listing <a href="https://research.columbia.edu/content/research-data-storage">places where Columbia researchers can share their data</a>.</p>
+<p>Yes. There are numerous data platforms that may be appropriate repositories for your data. Disciplinary repositories, when available, often have the best tools for describing your data. The Office of the Executive Vice President for Research (EVPR) provides a page listing <a href="https://research.columbia.edu/content/research-data-storage">places where Columbia researchers can share their data</a>.</p>
 
 <h2 id="uploading">Guidelines for uploading and submitting work to AC</h2>
 <h3>Is there a fee for uploading research to Academic Commons?</h3>
@@ -215,11 +219,12 @@
     <li>Read about managing your copyrights on the <a href="https://copyright.columbia.edu/">Copyright Advisory Services website</a>.</li>
 </ul>
 
-<p>To sign, <%= link_to t('blacklight.header_links.login'), new_user_session_path %> to Academic Commons and select My Account from the dropdown menu under your name, then follow the instructions at the top of the page. You only need to sign the agreement once, but your consent will apply to any material you upload.</p>
+<p>To sign, <%= render :partial=>'shared/log_in_link' %> to Academic Commons and select My Account from the dropdown menu under your name, then follow the instructions at the top of the page. You only need to sign the agreement once, but your consent will apply to any material you upload.</p>
 
 <h3>How do I upload my work?</h3>
 
 <h4>If you have a Columbia UNI</h4>
+
 <p><%= link_to t('blacklight.header_links.login'), new_user_session_path %> to Academic Commons with your Columbia UNI and password, then navigate to the Add New Work tab and follow the instructions.</p>
 
 <h4>If you do not have a Columbia UNI</h4>
@@ -294,11 +299,8 @@
 <h3>How can I access a copy of a thesis or dissertation under embargo?</h3>
 <p>Contact the author of the work to request access. If you are unable to find contact information for the author online, try contacting the author’s Columbia school or department to see if they can help.</p>
 
-<h3>My dissertation has been published without my consent</h3>
-<p>Since the start of 2024 Columbia University Libraries have identified an increase in dissertation plagiarism. Bad actors will copy dissertations and sell them online as books, either with the original titles and author names, or - more difficult to catch - with altered titles and author names.</p>
-
-<h4>Your legal rights</h4>
-<p>You, as the dissertation author, are the owner of your dissertation. It is illegal for your dissertation to be sold in this way without your consent. The exception to this is if you have released your dissertation into the public domain by giving it a CC0 license or given it a Creative Commons (CC) license that allows for commercial reuse. (<a href="https://creativecommons.org/share-your-work/cclicenses/">More about CC licenses</a>.)</p> 
+<h3>Instructions for depositing multimodal dissertations and supplemental materials to Columbia University Libraries</h3>
+<p>This workflow builds upon work done by staff at the City University of New York Graduate Center, specifically Mina Rees Library's <a href="https://libguides.gc.cuny.edu/ld.php?content_id=44359564">Digital Project Guidelines</a>.</p>
 
 <h4>What types of situations might violate my copyright?</h4>
 <p>Although each case is different, here are three example scenarios that may violate your ownership and copyright:</p>
@@ -308,10 +310,9 @@
   <li>Someone has taken paragraphs, chapters, or content from your dissertation, beyond what you consider to be Fair Use, and integrated it into another work without your permission</li>
 </ol>
 
-<h4>What you should do first</h4>
-<p>In the case where you believe another academic has plagiarized your work (example 3, above), the <a href="https://ombuds.columbia.edu/">Columbia Ombuds Office</a> is a good first point of contact for support and mediation.</p>
-<p>If your entire dissertation has been reproduced and sold, keep in mind that the person or people responsible are operating with different - sometimes elaborate - mechanisms to avoid being detected. Once you raise the alert with one platform, it will be more difficult to discover identifying information about the seller.</p>
-<p>Before you contact any business selling an unauthorized version of your dissertation, please reach out to Libraries staff at <a href="mailto:ac@columbia.edu">ac@columbia.edu</a> for support. Libraries staff can help you identify websites where your dissertation is being sold and gather identifying information about the seller.</p>
+<p><b>Please note:</b> The <a href="https://www.gsas.columbia.edu/content/distribution-defense-and-deposit-dissertation">GSAS Dissertation Deposit Form</a> allows for the deposit of one file that can be up to 35MB in size. Students who are uploading only one file that is 35MB or smaller should not use these instructions and should instead submit their supplemental file to GSAS when submitting their text dissertation.</p>
+<p>If a dissertation contains large audio or moving image files, communication with Libraries staff should begin as soon as possible. Oral histories, audio and video interviews, and supplemental materials related to projects requiring IRB review and approval require consultation with Libraries staff, should the author wish that they be considered for deposit in Academic Commons. Files greater than 10GB are not suitable for Academic Commons. Libraries staff are available to consult with authors about the most appropriate way to archive their large files.</p>
+
 
 <h4>Reporting & requesting removal</h4>
 <p>As the copyright owner, you will need to contact businesses selling an unauthorized version of your dissertation. Below are some links for reporting copyright infringement.</p>
@@ -321,30 +322,10 @@
   <li><a href="https://support.www.abebooks.com/en_US/contact?topicId=GUT6MR3YR84A66SR&subtopicId=GKYW35EDV8RDAYTH&groupId=GFG897ZPSJJ4AQYW">AbeBooks: Report a suspicious listing</a></li>
 </ul>
 
-<h4>Your dissertation in Academic Commons</h4>
-<p>By default, your dissertation in Academic Commons will have the copyright statement “In Copyright.”</p>
-<p>You are always able to request an embargo or an embargo extension for your dissertation through the Graduate School of Arts and Sciences (GSAS) Dissertation Office (<a href="mailto:gsas-dissertations@columbia.edu">gsas-dissertations@columbia.edu</a>). Embargos are typically granted for one or two years with the ability to request extensions. You can do this when you first publish your dissertation or at any point in the future. Decisions about granting embargos are made by GSAS.</p>
+<h5>Project narrative</h5>
+<p>A written document in PDF format that outlines the details of the project. The Libraries expects GSAS and degree programs will set guidelines for written narratives describing dissertation projects that are not text based.</p>
 
-<h4>Managing risk when your work is available online</h4>
-<p>Because an unauthorized publisher may attempt to hide its operations by changing an author name or dissertation title (read about one altered dissertation title at <a href="https://dailynous.com/2023/09/20/is-someone-selling-your-dissertation-without-your-permission/">Daily Nous</a>), there is no one way to check for unauthorized publications. However, using a search engine to search for your name, or your name and a keyword, variations of your dissertation title, or paragraphs of text from your introduction, are some strategies to check if your work has been used without your permission. Be sure to look through a few pages of search results.</p>
-<p>There is always a risk that someone will misuse copyrighted work that is accessible online, yet the availability of your dissertation in Academic Commons is what creates a credible, verifiable registration of your contribution to your field. Columbia University Libraries staff will continue to update this guide as we learn about additional steps authors can take to protect their copyrighted intellectual property.</p>
+<h5>Manifest</h5>
+<p>A written document in PDF format that includes all materials being deposited, along with a brief description of each item, and any additional information or instructions needed to use the project files. This manifest should be approved by the faculty advisor. It does not need to be any particular length.</p>
 
-<h4>Registering your copyright</h4>
-<p>As the author of your dissertation, you hold the copyright whether or not you register with the <a href="https://www.copyright.gov/">U.S. Copyright Office</a>. Registering is not necessary for you to be able to assert ownership in your work. Note that the Copyright Claims Board is available for small claims up to $30,000 without copyright registration. You are also able to sue for non-monetary damages without registration.</p>
-<p>However, registration of your copyright may help if you choose to pursue legal action for monetary damages against an unauthorized publisher.</p>
-<p>There are two registration options, depending on where you are in the dissertation deposit process:</p>
 
-<ul>
-  <li>Register when you deposit your dissertation via the ProQuest Deposit Gateway. ProQuest offers copyright registration and charges a fee for the service.</li>
-  <li>Register directly with the U.S. Copyright Office. Use this option if you have already deposited your dissertation or if you would rather handle the registration process yourself. Go to <a href="https://www.copyright.gov/registration/">https://www.copyright.gov/registration/</a> to learn about the process and fees.</li>
-</ul>
-
-<h4>Additional resources</h4>
-
-<ul>
-  <li><a href="https://www.gsas.columbia.edu/content/dissertation">Graduate School of Arts and Sciences Dissertation Office</a></li>
-  <li><a href="https://copyright.columbia.edu/index.html">Columbia Libraries Copyright Advisory Services</a></li>
-</ul>
-
-<h4>Will my dissertation be used to train AI?</h4>
-<p>Please see our <%= link_to t('blacklight.header_links.policies'), policies_path %> for information about how we manage automated (web crawler) access to Academic Commons.</p>

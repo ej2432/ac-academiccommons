@@ -18,39 +18,50 @@ Current recommended version of Ruby is specified in `.ruby-version`.
 
 3. Create local config files from templates
    ```
-   bundle exec rake config_files
+   bin/copy-config-template-files
    ```
 
-4. Install any needed gems using Bundler
+4. Create encrypted credentials files for development and test environments
+   ```
+   bundle exec rake ac:templated_credentials:add_all
+   ```
+
+5. Install any needed gems using Bundler
    ```
    bundle install
    ```
 
-5. Install required Javascript libraries using Yarn
-    ```
-    brew install yarn
-    yarn
-    ```
+6. Install required Javascript libraries using Yarn
+   ```
+   brew install yarn
+   yarn
+   ```
 
-6. Setup your local development DB.
+7. Setup your local development DB.
    ```
    bundle exec rake db:migrate
    ```
 
-7. Start your local fedora and solr instances. Docker must be running on your computer.
+8. Start your local fedora and solr instances. Docker must be running on your computer.
    ```
    bundle exec rake ac:docker:start
    ```
 
-8. In a separate terminal window, start the webpack dev server for faster asset compilation.
+9. In a separate terminal window, start the vite dev server for faster asset compilation.
    ```
-   ./bin/webpack-dev-server
+   bin/vite dev
    ```
 
-9. Start your local Rails app
+10. Start your local Rails app
    ```
    rails server
    ```
+
+11. (Optional, but recommended if writing any JavaScript) In a separate terminal, run the typescript compiler to typecheck code and watch for changes. Typescript is not used for transpilation in this project, only static type checking. You can use the provided rake task, or run `tsc --watch` yourself.
+   ```
+   bundle exec rake ac:watch_type_check 
+   ```
+
 
 ## Populating your development instance with items
 If you need an object in AC to do further testing and development, add an item with the following instructions.
@@ -83,7 +94,19 @@ If you would like to see pages that require authentication follow the steps belo
    rake db:seed
    ```
 
-2. Log in as one of the users that was just added. When you click the `log in` link, you will be prompted for a uni.
+2. Create a `config/cul_ldap.yml` file with the following content (also created from template in bin/copy-config-template-files). Replace the host, port, username and password with the values as instructed in this [wiki page](https://columbiauniversitylibraries.atlassian.net/wiki/spaces/USGSERVICES/pages/10947594/LDAP+Lookup+including+affiliations+via+privileged+lookup).
+   ```
+   shared:
+     host: 'SERVER_NAME'                # REPLACE!
+     port: PORTNO                       # REPLACE!
+     encryption: simple_tls
+     auth:
+       method: simple
+       username: "USERNAME"             # REPLACE!
+       password: "PLACEHOLDER_PASSWORD" # REPLACE!
+   ```
+
+3. Log in as one of the users that was just added. When you click the `log in` link, you will be prompted for a uni.
 
    For administrative privileges, log in as `ta123`.
 
@@ -94,6 +117,24 @@ We use the `rubocul` gem to centralize our rubocop config and share it among rep
 ```
 rubocop --auto-gen-config  --auto-gen-only-exclude --exclude-limit 10000
 ```
+
+To run the cops, you can use the executable:
+```
+bin/rubocop
+```
+
+The cops also run in the default rake task, `bundle exec rake`.
+
+## Editing TypeScript/JavaScript
+Academic Commons is in the process of migrating our JavaScript code to TypeScript. We use TypeScript for static type checking only--**type checking does not occur during deployment**.
+
+Run the following command before committing changes, and address any type errors that get printed:
+   ```
+   tsc
+   ```
+
+The way that TypeScript integrates with our asset pipeline is a bit unique; we use Vite, which will transpile our `.ts` files into `.js` files for us (using `ESBuild`), but **it will not run a type analysis before doing so** (as that would take time and Vite is all about saving time!).
+The way that we ensure type-safety is by A) Using an IDE that statically type-checks our `.ts` files and by B) running the typescript compiler without transpilation (`--noEmit` flag/option), so that type errors are printed to console (do so before committing changes). This is configured in `./tsconfig.json`.
 
 ## Running tests
 1. In order to run tests that require javascript you might need `chrome` installed (needs to be tested).
@@ -106,6 +147,26 @@ rubocop --auto-gen-config  --auto-gen-only-exclude --exclude-limit 10000
    cap test cul:auto_tag
    ```
    This will create a tag based on the version number (listed in `VERSION`).
+
+## Editing encrypted credentials
+### In development
+Academic Commons uses Rails credentials to encrypt and load sensitive information. During local development, an encrypted `development.enc.yml` file is used
+with dummy values loaded from the local template file: `config/development_credentials_template.yml`. The encrypted credentials are created from the template using the following rake task:
+```
+   bundle exec rake ac:templated_credentials:add_all
+```
+
+To edit the values during development, simply edit the `config/local_credentials.yml` file and re-run the rake task.
+
+### In deployed environments
+To edit these values in deployed environments, you must SSH into the host and edit the credentials file there using the provided Rails task:
+```
+EDITOR=vim bin/rails credentials --environment=academiccommons_{dev|test|prod}
+```
+
+The master keys for deployed environments are only stored on the respective servers in the deployment's shared directory.
+
+Make sure when you are editing the credentials that you include the environment flag and set it properly! You can also set a different editor than vim if you would like.
 
 ## API v1
 Documentation for the Academic Commons API can be found at `/api/v1/swagger_doc`. To view documentation in a swagger GUI, the following url has to be created:
@@ -132,7 +193,7 @@ For every asset and item in Academic Commons we store view and download statisti
 - Depositors that self-identify as students are sent a notification that serves as a reminder that departmental approval is required for student works.
 
 ### Worker Queue
-We are using redis and resque for our worker queue. The worker queue UI can be accessed by administrators are `/admin/resque`. Redis/resque are configured for our deployed production and test environments. Development does not have a worker queue yet. 
+We are using redis and resque for our worker queue. The worker queue UI can be accessed by administrators are `/admin/resque`. Redis/resque are configured for our deployed production and test environments. Development does not have a worker queue yet.
 
 ### Indexing Digital Objects
 
@@ -154,7 +215,7 @@ To index specific items/assets, use the following rake task:
 ```
 # available parameters: pids and pidlist
 # pids should be a comma-delineated list of pids
-# pidlist should be a file with a pid in everyline
+# pidlist should be a file with a pid in every line
 
 ac:reindex_by_pid
 ```
@@ -169,7 +230,7 @@ To index select item/assets, use the following rake task:
 ```
 # available parameters: pids and pidlist
 # pids should be a comma-delineated list of pids
-# pidlist should be a file with a pid in everyline 
+# pidlist should be a file with a pid in every line
 
 rake ac:index:by_pid pids=ac:test1,ac:test2
 ```

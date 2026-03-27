@@ -67,11 +67,14 @@ class AssetsController < ApplicationController
 
   def content_datastream?
     # TODO: can be refactored after a general reindex of assets to use datastreams_ssim
-    HTTP.head(ds_content_url('content')).code == 200
+
+    HTTP.basic_auth(
+      user: ActiveFedora.config.credentials[:user], pass: ActiveFedora.config.credentials[:password]
+    ).head(ds_content_url('content')).code == 200
   end
 
   def ds_content_url(dsid)
-    Rails.application.config_for(:fedora)['url'] + '/objects/' + @asset.fetch(:fedora3_pid_ssi, nil) + '/datastreams/' + dsid + '/content'
+    Rails.application.config_for(:fedora)[:url] + '/objects/' + @asset.fetch(:fedora3_pid_ssi, nil) + '/datastreams/' + dsid + '/content'
   end
 
   # Downloading of files is handed off to nginx to improve performance.

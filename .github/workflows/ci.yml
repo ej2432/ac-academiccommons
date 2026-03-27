@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby-version: ['3.1.3']
-        node: ['16']
+        ruby-version: ['3.3.8']
+        node: ['20']
     env:
       RAILS_ENV: test
       NOKOGIRI_USE_SYSTEM_LIBRARIES: true
@@ -18,7 +18,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install libxslt for nokogiri gem (required for version < 1.11)
-        run: sudo apt-get install -y libxml2-dev libxslt-dev
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxml2-dev libxslt-dev
       - name: Add --no-document option to .gemrc file to speed up bundle install
         run: "echo 'gem: --no-document' > ~/.gemrc"
       - name: Set up Ruby
@@ -37,11 +39,15 @@ jobs:
           node-version: ${{ matrix.node }}
       - run: npm install -g yarn
       - run: yarn install --frozen-lockfile
-      - name: Create config files from config/template files
-        run: for c in config/*.template.yml; do cp $c ${c/template.}; done
+      - name: Copy config files
+        run: bin/copy-config-template-files
+      - name: Create test credentials
+        run: bundle exec rake "ac:templated_credentials:add[test]"
       - name: Load DB Schema
         run: bundle exec rake db:schema:load
       - name: Prepare DB
         run: bundle exec rake db:test:prepare
+      - name: Run Type Checks
+        run: bundle exec rake ac:type_check
       - name: Run default rake task (CI)
         run: bundle exec rake

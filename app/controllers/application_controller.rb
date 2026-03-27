@@ -8,7 +8,6 @@ class ApplicationController < ActionController::Base
 
   helper :all # include all helpers, all the time
   helper_method :fedora_config # share some methods w/ views via helpers
-  helper_method :deposits_enabled?
 
   rescue_from CanCan::AccessDenied do |exception|
     if current_user.nil?
@@ -20,10 +19,6 @@ class ApplicationController < ActionController::Base
     else
       raise exception
     end
-  end
-
-  def deposits_enabled?
-    SiteOption.deposits_enabled
   end
 
   def fedora_config
@@ -42,6 +37,6 @@ class ApplicationController < ActionController::Base
 
   # Redirect to last page a user visited before log in.
   def after_sign_in_path_for(resource)
-    request.env['omniauth.origin'] || stored_location_for(resource) || root_path
+    session[:return_to] || root_path
   end
 end

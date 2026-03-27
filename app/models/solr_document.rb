@@ -8,12 +8,6 @@ class SolrDocument
   # self.unique_key = 'id'
   self.timestamp_key = 'record_creation_dtsi'
 
-  # Email uses the semantic field mappings below to generate the body of an email.
-  SolrDocument.use_extension(Blacklight::Document::Email)
-
-  # SMS uses the semantic field mappings below to generate the body of an SMS email.
-  SolrDocument.use_extension(Blacklight::Document::Sms)
-
   # DublinCore uses the semantic field mappings below to assemble an OAI-compliant Dublin Core document
   # Semantic mappings of solr stored fields. Fields may be multi or
   # single valued. See Blacklight::Document::SemanticFields#field_semantics
@@ -159,7 +153,12 @@ class SolrDocument
 
   def image_url(size = 256)
     return nil unless asset?
-    "#{Rails.application.secrets.iiif[:urls].sample}/#{fetch(:fedora3_pid_ssi)}/full/!#{size},#{size}/0/native.jpg"
+    "#{Rails.application.credentials.iiif.urls.sample}/#{fetch(:fedora3_pid_ssi)}/full/!#{size},#{size}/0/default.jpg"
+  end
+
+  def file_uri_ds_location_to_file_path(file_uri_ds_location)
+    return nil if file_uri_ds_location.nil?
+    Addressable::URI.unencode(file_uri_ds_location).gsub(%r{^file:/+}, '/')
   end
 
   def wowza_media_url(request)
@@ -167,10 +166,10 @@ class SolrDocument
     return unless playable?
     # Check that it is free to read
 
-    wowza_config = Rails.application.secrets[:wowza]
+    wowza_config = Rails.application.credentials.wowza
     raise 'Missing wowza config' unless wowza_config
 
-    access_copy_location = fetch('access_copy_location_ssi', nil)&.gsub(/^file:/, '')
+    access_copy_location = file_uri_ds_location_to_file_path(fetch('access_copy_location_ssi', nil))
 
     return unless access_copy_location
 

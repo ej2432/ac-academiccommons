@@ -26,6 +26,7 @@
 <h2 id="oai">OAI-PMH</h2>
 <p>Academic Commons supports the <a href="https://www.openarchives.org/OAI/openarchivesprotocol.html">Open Archives Initiative Protocol for Metadata Harvesting (OAI-PMH)</a>, version 2.0.
 The base URL is: <%= link_to oai_catalog_url, oai_catalog_url %></p>
+<p>Because of strategies employed to combat excessive bot traffic to this website, in order to utilize our OAI-PMH endpoint you may need to work with us to set up a custom user agent. Please email <a href="mailto:ac@columbia.edu">ac@columbia.edu</a> to discuss this approach.</p>
 
 <h2 id="sword">SWORD</h2>
 <p>Academic Commons can receive materials via <a href="http://swordapp.org/">SWORD deposit</a>. SWORD is a protocol that automates the deposit process. SWORD is best used for recurring deposits, such as regular deposits of theses or working papers from Columbia departments and regular deposits of articles from Columbia-affiliated journals. Additionally, while the Academic Commons API does not include POST functionality, SWORD can be used in a similar manner to make deposits to Academic Commons in a more programmatic way.</p>
@@ -59,7 +60,7 @@ The base URL is: <%= link_to oai_catalog_url, oai_catalog_url %></p>
 <p>Crawling, downloading, or otherwise accessing and/or storing content from Academic Commons for the purposes of training commercial Large Language Models (LLMs) or supplementing commercial Retrieval-Augmented Generation (RAG) systems is not permitted. The use of bibliographic metadata (without abstract text, for which we do not hold the copyright) may be used for this purpose unless a user-agent has been expressly disallowed through our site’s robots.txt.</p>
 
 <h2 id="sitemap">Sitemap</h2>
-<p>The sitemap for Academic Commons is regenerated every weekday. <%= link_to nil, "#{root_url}sitemap.xml.gz" %></p>
+<p>The sitemap for Academic Commons is regenerated every weekday. <%= link_to nil, "#{root_url}/sitemaps/sitemap.xml.gz" %></p>
 
 <h2 id="metadata_license">Metadata License</h2>
 <p>Academic Commons bibliographic metadata—excluding abstracts, which may be under copyright—is available under a <a href="https://creativecommons.org/publicdomain/zero/1.0/">Creative Commons 0 1.0 Universal</a> license.</p>

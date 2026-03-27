@@ -11,12 +11,13 @@ function addCreatorField(creatorListId) {
 
 // Waits for a click on button with creator-list-id data attribute and then adds
 // another set of creator input fields.
-$(document).ready(function(){
+const ready = function(){
   $("[data-creator-list-id]").click(function(e) {
     e.preventDefault()
 
-    creatorListId = $(this).data("creator-list-id")
-    textColor = $(this).data("text-color")
+    let creatorListId = $(this).data("creator-list-id")
     addCreatorField(creatorListId)
   });
-})
+};
+
+document.addEventListener('turbo:load', ready);

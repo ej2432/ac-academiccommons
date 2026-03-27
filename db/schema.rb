@@ -2,22 +2,21 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# This file is the source Rails uses to define your schema when running `rails
-# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
 # be faster and is potentially less error prone than running all of your
 # migrations from scratch. Old migrations may fail to apply correctly if those
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_08_20_183333) do
-
+ActiveRecord::Schema[8.0].define(version: 2025_09_26_191135) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
     t.integer "record_id", null: false
     t.integer "blob_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
@@ -28,9 +27,16 @@ ActiveRecord::Schema.define(version: 2024_08_20_183333) do
     t.string "content_type"
     t.text "metadata"
     t.bigint "byte_size", null: false
-    t.string "checksum", null: false
-    t.datetime "created_at", null: false
+    t.string "checksum"
+    t.datetime "created_at", precision: nil, null: false
+    t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.integer "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "agreements", force: :cascade do |t|
@@ -38,8 +44,8 @@ ActiveRecord::Schema.define(version: 2024_08_20_183333) do
     t.string "name", null: false
     t.string "email", null: false
     t.string "agreement_version", null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "user_id"
     t.index ["user_id"], name: "index_agreements_on_user_id"
   end
@@ -48,18 +54,9 @@ ActiveRecord::Schema.define(version: 2024_08_20_183333) do
     t.integer "user_id", null: false
     t.string "document_id"
     t.string "title"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "user_type"
-  end
-
-  create_table "content_blocks", force: :cascade do |t|
-    t.string "title", null: false
-    t.integer "user_id", null: false
-    t.text "data"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.index ["title"], name: "index_content_blocks_on_title"
   end
 
   create_table "deposits", force: :cascade do |t|
@@ -75,8 +72,8 @@ ActiveRecord::Schema.define(version: 2024_08_20_183333) do
     t.string "doi_pmcid"
     t.text "notes"
     t.boolean "archived", default: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "user_id"
     t.text "metadata"
     t.string "hyacinth_identifier"
@@ -98,8 +95,8 @@ ActiveRecord::Schema.define(version: 2024_08_20_183333) do
     t.string "uni", null: false
     t.boolean "unsubscribe"
     t.string "email"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["uni", "unsubscribe"], name: "index_email_preferences_on_uni_and_unsubscribe"
     t.index ["uni"], name: "index_email_preferences_on_uni", unique: true
   end
@@ -111,7 +108,7 @@ ActiveRecord::Schema.define(version: 2024_08_20_183333) do
     t.string "uid"
     t.string "ip"
     t.string "session_id"
-    t.datetime "timestamp"
+    t.datetime "timestamp", precision: nil
   end
 
   create_table "feature_categories", force: :cascade do |t|
@@ -154,18 +151,18 @@ ActiveRecord::Schema.define(version: 2024_08_20_183333) do
     t.string "kind", null: false
     t.string "email"
     t.string "uni"
-    t.datetime "sent_at"
+    t.datetime "sent_at", precision: nil
     t.boolean "success", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["doi"], name: "index_notifications_on_doi"
   end
 
   create_table "searches", force: :cascade do |t|
     t.text "query_params"
     t.integer "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "user_type"
     t.index ["user_id"], name: "index_searches_on_user_id"
   end
@@ -173,15 +170,21 @@ ActiveRecord::Schema.define(version: 2024_08_20_183333) do
   create_table "sessions", force: :cascade do |t|
     t.string "session_id", null: false
     t.text "data"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["session_id"], name: "index_sessions_on_session_id"
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
-  create_table "site_options", force: :cascade do |t|
-    t.string "name"
-    t.boolean "value"
+  create_table "site_configurations", force: :cascade do |t|
+    t.boolean "downloads_enabled", default: true, null: false
+    t.string "downloads_message"
+    t.boolean "deposits_enabled", default: true, null: false
+    t.string "alert_message"
+    t.integer "singleton_guard", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["singleton_guard"], name: "index_site_configurations_on_singleton_guard", unique: true
   end
 
   create_table "statistics", force: :cascade do |t|
@@ -190,9 +193,9 @@ ActiveRecord::Schema.define(version: 2024_08_20_183333) do
     t.string "ip_address"
     t.string "identifier"
     t.string "result"
-    t.datetime "at_time", null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "at_time", precision: nil, null: false
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["at_time"], name: "index_statistics_on_at_time"
     t.index ["event"], name: "index_statistics_on_event"
     t.index ["identifier"], name: "index_statistics_on_identifier"
@@ -202,7 +205,7 @@ ActiveRecord::Schema.define(version: 2024_08_20_183333) do
     t.integer "tag_id"
     t.integer "taggable_id"
     t.string "taggable_type"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["tag_id"], name: "index_taggings_on_tag_id"
     t.index ["taggable_id", "taggable_type"], name: "index_taggings_on_taggable_id_and_taggable_type"
   end
@@ -227,20 +230,20 @@ ActiveRecord::Schema.define(version: 2024_08_20_183333) do
     t.boolean "admin"
     t.string "uid", null: false
     t.string "email"
-    t.string "crypted_password"
+    t.string "encrypted_password"
     t.string "persistence_token"
     t.integer "sign_in_count", default: 0, null: false
     t.text "last_search_url"
-    t.datetime "last_sign_in_at"
-    t.datetime "last_request_at"
-    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at", precision: nil
+    t.datetime "last_request_at", precision: nil
+    t.datetime "current_sign_in_at", precision: nil
     t.string "last_sign_in_ip"
     t.string "current_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
     t.string "provider"
     t.string "role"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -251,6 +254,7 @@ ActiveRecord::Schema.define(version: 2024_08_20_183333) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "agreements", "users"
   add_foreign_key "deposits", "users"
   add_foreign_key "featured_search_values", "featured_searches"

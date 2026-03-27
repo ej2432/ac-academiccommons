@@ -1,4 +1,6 @@
 // Disable all input elements in form
-$(document).ready(function(){
+const ready = function(){
   $('form.disable :input').prop('disabled', true);
-});
+};
+
+document.addEventListener('turbo:load', ready);

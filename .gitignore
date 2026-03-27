@@ -2,6 +2,8 @@
 .project
 .bundle
 db/*.sqlite3
+db/*.sqlite3-shm
+db/*.sqlite3-wal
 db/*.sqlite3-journal
 db/cstore/**
 db/sphinx/**
@@ -10,6 +12,7 @@ log/*.log*
 tmp/**/*
 tmp/*_visits
 tmp/*_visitors
+config/cul_ldap.yml
 config/database.yml
 config/solr.yml
 config/solr_wrapper.yml
@@ -19,6 +22,8 @@ config/s3_credentials.yml
 config/secrets.yml
 config/google_analytics.yml
 config/blacklight.yml
+config/local_credentials.yml
+config/embedding_service.yml
 # docker ignores
 docker/docker-compose.*.yml
 #pre-docker ignores, so they don't get committed if still in workspace
@@ -42,7 +47,7 @@ doc/plugins
 doc/*.dot
 coverage/*
 /public/assets
-/public/sitemap*.xml.gz
+/public/sitemaps/sitemap*.xml.gz
 /.settings
 /.env*
 .byebug_history
@@ -57,3 +62,30 @@ coverage/*
 yarn-debug.log*
 .yarn-integrity
 .bash_profile
+
+# Ignore any key files you have locally
+/config/credentials/*.key
+/config/credentials/academiccommons_dev.key
+/config/credentials/academiccommons_test.key
+/config/credentials/academiccommons_staging.key
+/config/credentials/academiccommons_prod.key
+
+/config/credentials/development.yml.enc
+/config/credentials/development.key
+/config/credentials/test.yml.enc
+/config/credentials/test.key
+/config/credentials.yml.enc
+/config/master.key
+
+# Since we use yarn instead of npm, avoid accidentally committing a top level package-lock.json file
+/package-lock.json
+
+# Vite Ruby
+/public/vite*
+node_modules
+# Vite uses dotenv and suggests to ignore local-only env files. See
+# https://vitejs.dev/guide/env-and-mode.html#env-files
+*.local
+
+# Ignore local rake tasks
+/lib/tasks/ac/local*.rake

@@ -1,56 +1,67 @@
 # frozen_string_literal: true
 
+ruby File.read('.ruby-version').strip
+
 source 'https://rubygems.org'
 
-gem 'rails', '6.0.4'
+gem 'rails', '8.0.4'
 
 gem 'active-fedora', '~> 8.7'
 gem 'active-triples', git: 'https://github.com/cul/ActiveTriples', branch: 'deprecation_update'
 gem 'addressable'
-gem 'blacklight', '~> 7.29'
-gem 'blacklight_oai_provider'
-gem 'blacklight_range_limit',
-    git: 'https://github.com/JackBlackLight/blacklight_range_limit.git', branch: 'use_blacklight_component'
+gem 'blacklight', '~> 8.12.3'
+# Technically this does not officially support BL 8 (https://github.com/projectblacklight/blacklight_oai_provider/commit/492ca112dcc1ecd150c23ca27cd2554e58492562)
+gem 'blacklight_oai_provider', github: 'projectblacklight/blacklight_oai_provider'
+# will wait for vite migration to use rangelimit (ACHYDRA-1022)
+# gem 'blacklight_range_limit',
+#     git: 'https://github.com/JackBlackLight/blacklight_range_limit.git', branch: 'use_blacklight_component'
 gem 'bootsnap'
 gem 'cancancan'
-gem 'cul-ldap'
-gem 'cul_omniauth', '>= 0.7.0'
+# Point to our branch of cul-ldap -- this handles no results case for find_by_uni queries without raising an error
+gem 'cul-ldap', '~> 0.1.0'
 gem 'deprecation', '>= 1.1.0'
-gem 'devise'
+gem 'devise' # consider pinning
 gem 'fancybox2-rails' # Used in helper classes. TODO: Confirm that this is needed and used by the application.
 gem 'gaffe'
-gem 'grape', '>= 1.8.0'
-gem 'grape-entity', '>= 1.0.0'
-# pinning swagger to commit that supports braces in array params; functionality is broken in next version - 0.31.0
-gem 'grape-swagger', git: 'https://github.com/ruby-grape/grape-swagger', ref: 'da351d0f99228f31329210d21b975a64500e73ab'
+gem 'grape', '~> 1.8.0'
+gem 'grape-entity', '~> 1.0.0'
+gem 'grape-swagger', '~> 2.0.0'
+gem 'mustermann', '~> 2.0'
+gem 'om', '3.1.1'
+gem 'omniauth', '>= 2.1'
+gem 'omniauth-cul'
+gem 'omniauth-rails_csrf_protection', '~> 1.0'
+
+gem 'fugit', '>= 1.11.1'
 gem 'http'
-gem 'jbuilder'
-gem 'jquery-rails'
+gem 'jbuilder', '~> 2.13.0'
+gem 'jquery-rails', '~> 4.6.0'
 gem 'mail', '~> 2.8'
 gem 'multipart-post', '~>2.0.0'
 gem 'net-scp', '~> 4.0.0'
-gem 'net-ssh', '~> 7.2.0'
-gem 'nokogiri', '~> 1.15.2'
+gem 'net-ssh', '~> 7.3.0'
+gem 'nokogiri', '>= 1.18.9'
 gem 'okcomputer'
+gem 'premailer', '~> 1.27.0'
 gem 'premailer-rails'
 gem 'rainbow'
-gem 'resque', '~> 2.0'
+gem 'resque', '~> 2.7.0'
+gem 'resque-scheduler', '>= 4.10.2'
 gem 'rinku'
 gem 'rsolr-ext'
 gem 'rubyzip', require: 'zip'
 gem 'sitemap_generator'
-gem 'turbolinks'
-gem 'uglifier'
+gem 'sprockets-rails'
+gem 'turbo-rails'
 gem 'unicode'
-gem 'voight_kampff'
-gem 'webpacker', '~> 5.4.0'
+gem 'vite_rails'
+gem 'voight_kampff', '~>2.0', require: 'voight_kampff/rails'
 gem 'whenever', require: false
 gem 'will_paginate'
 gem 'wowza-secure_token'
-
 # Database
 gem 'mysql2', '>= 0.5.6'
-gem 'sqlite3', '~> 1.4'
+gem 'sqlite3', '>= 2.1' # compatibility matrix: https://dev.to/galtzo/activerecord-sqlite3-compatibility-matrix-58id
 
 group :development do
   gem 'listen'
@@ -60,7 +71,7 @@ end
 group :development, :test do
   # Deploying by using Capistrano. Using rails, rvm and passenger cap gems as
   # required by our deployment environment.
-  gem 'capistrano', '3.17', require: false
+  gem 'capistrano', '~> 3.19.0', require: false
   gem 'capistrano-cul', require: false
   gem 'capistrano-passenger', '~> 0.2', require: false
   gem 'capistrano-rails', '~> 1.4', require: false
@@ -70,13 +81,13 @@ group :development, :test do
 
   gem 'byebug'
   gem 'capybara', '~> 3.39'
-  gem 'database_cleaner'
+  gem 'database_cleaner', '~> 2.1.0'
   gem 'equivalent-xml'
-  gem 'factory_bot_rails'
+  gem 'factory_bot_rails', '~> 6.5.0'
   gem 'jettywrapper', '>=1.4.0', git: 'https://github.com/samvera-deprecated/jettywrapper.git', branch: 'master'
-  gem 'json_spec'
-  gem 'rspec-its'
-  gem 'rspec-rails'
+  # gem 'json_spec'
+  gem 'rspec-its', '~> 2.0.0'
+  gem 'rspec-rails', '~> 8.0.0'
   gem 'selenium-webdriver', '~> 4.11'
   gem 'simplecov', '>= 0.22.0', require: false
   gem 'solr_wrapper', '~> 4.0'
@@ -85,3 +96,5 @@ end
 
 # Use Puma for local development
 gem 'puma', '~> 5.2'
+
+gem 'csv', '~> 3.3'

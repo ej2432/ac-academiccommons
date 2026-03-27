@@ -39,7 +39,7 @@ namespace :ac do
         end
       end
 
-      bots.sort! { |a, b| a['pattern'] <=> b['pattern'] }
+      bots.sort_by! { |bot| bot['pattern'] }
 
       puts Rainbow("\nListing #{bots.count} Bots\n").cyan
 
@@ -57,7 +57,7 @@ namespace :ac do
       end
 
       filename = File.expand_path(ENV['FILENAME'])
-      raise "Could not find file #{filename}" unless File.exists?(filename)
+      raise "Could not find file #{filename}" unless File.exist?(filename)
 
       hosts = JSON.parse(File.read(filename))['hosts']['data']
       not_listed = hosts.map { |h| h['items'] }

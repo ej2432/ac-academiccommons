@@ -15,7 +15,7 @@ SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(
 SimpleCov.start
 
 ENV['RAILS_ENV'] ||= 'test'
-require File.expand_path('../../config/environment', __FILE__)
+require_relative '../config/environment'
 # Prevent database truncation if the environment is production
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'spec_helper'
@@ -42,12 +42,11 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::ControllerHelpers, type: :view
   config.include ActiveJob::TestHelper,           type: :job
-  config.include JsonSpec::Helpers
   config.include FixtureHelpers
   config.include Warden::Test::Helpers
   config.include ActiveSupport::Testing::TimeHelpers
 
-  config.fixture_path = File.join(::Rails.root, 'spec', 'fixtures')
+  config.fixture_paths = Rails.root.join('spec/fixtures').to_s
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
